@@ -1,4 +1,4 @@
-# MariaDB Connector/ODBC 3.2
+# MariaDB Connector/ODBC 3.2 Trigger CI
 <p align="center">
   <a href="http://mariadb.com/">
     <img src="https://mariadb.com/kb/static/images/logo-2018-black.png">
