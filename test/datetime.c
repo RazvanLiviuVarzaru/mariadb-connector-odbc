@@ -728,6 +728,7 @@ ODBC_TEST(t_bug9927)
   SQLRETURN rc;
   SQLUSMALLINT Nullable= (SQLUSMALLINT)((ServerNotOlderThan(Connection, 10, 10, 2) || IsMysql) ?
     SQL_NULLABLE : SQL_NO_NULLS);
+  SQLUSMALLINT Scope= SQL_SCOPE_CURROW;
 
   OK_SIMPLE_STMT(Stmt, "DROP TABLE IF EXISTS t_bug9927");
   OK_SIMPLE_STMT(Stmt, "CREATE TABLE t_bug9927 (a TIMESTAMP DEFAULT '2022-02-24 05:00:00',"
@@ -736,7 +737,7 @@ ODBC_TEST(t_bug9927)
   /* Not sure which exactly version that was introduced, but 10.11.2 is first ga */
   CHECK_STMT_RC(Stmt, SQLSpecialColumnsW(Stmt, SQL_ROWVER, NULL, 0,
                                    NULL, 0, LW("t_bug9927"), SQL_NTS,
-                                   0, Nullable));
+                                   Scope, Nullable));
   rc= SQLFetch(Stmt);
   if (rc == SQL_NO_DATA)
   {
