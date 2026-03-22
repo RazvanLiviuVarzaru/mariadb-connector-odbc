@@ -1462,14 +1462,22 @@ SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
     SQLUSMALLINT Nullable)
 {
   CHECK_STMT_CLEAR_ERROR(StatementHandle);
-#ifdef _ACTIONS_TRACE_
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(__arm64__)
+# include <isql.h>
+# ifdef IODBC_VERSION
+  printf("iODBC version: %s\n", IODBC_VERSION);
+# endif
+  printf("# scope %p nullable %p diff %llu\n ", &Scope, &Nullable, &Nullable - &Scope);
+  if (&Nullable - &Scope == 1) {
+    printf("# Nullable if it was padded: %hu\n", *(&Nullable + 3));
+  }
+# ifdef _ACTIONS_TRACE_
   if (getenv("GITHUB_ACTIONS") != NULL && strncmp(getenv("GITHUB_ACTIONS"), "true", 4) == 0 && IdentifierType == SQL_ROWVER)
   {
     printf("# -- Nullable: %hu)\n", Nullable);
   }
-#endif // __APPLE__
-#endif
+# endif //_ACTIONS_TRACE_
+#endif // __APPLE__ && __arm64__
   return MA_SQLSpecialColumns(StatementHandle, IdentifierType, CatalogName, NameLength1,
     SchemaName, NameLength2, TableName, NameLength3, Scope, Nullable);
 }
@@ -1487,14 +1495,22 @@ SQLRETURN SQL_API SQLSpecialColumnsW(SQLHSTMT StatementHandle,
     SQLUSMALLINT Scope,
     SQLUSMALLINT Nullable)
 {
-#ifdef _ACTIONS_TRACE_
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(__arm64__)
+# include <isql.h>
+# ifdef IODBC_VERSION
+  printf("iODBC version: %s\n", IODBC_VERSION);
+# endif
+  printf("# scope %p nullable %p diff %llu\n ", &Scope, &Nullable, &Nullable - &Scope);
+  if (&Nullable - &Scope == 1) {
+    printf("# Nullable if it was padded: %hu\n", *(&Nullable + 3));
+  }
+# ifdef _ACTIONS_TRACE_
   if (getenv("GITHUB_ACTIONS") != NULL && strncmp(getenv("GITHUB_ACTIONS"), "true", 4) == 0 && IdentifierType == SQL_ROWVER)
   {
     printf("# -- Nullable: %hu)\n", Nullable);
   }
-#endif // __APPLE__
-#endif
+# endif //_ACTIONS_TRACE_
+#endif // __APPLE__ && __arm64__
   return MA_SQLSpecialColumnsW(StatementHandle, IdentifierType, CatalogName, NameLength1,
     SchemaName, NameLength2, TableName, NameLength3, Scope, Nullable);
 }
