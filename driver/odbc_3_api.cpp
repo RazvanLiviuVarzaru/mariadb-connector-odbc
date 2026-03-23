@@ -1450,6 +1450,18 @@ SQLRETURN SQL_API SQLSetStmtOption(SQLHSTMT StatementHandle,
 /* }}} */
 
 /* {{{ SQLSpecialColumns */
+#if defined(__APPLE__) && defined(__arm64__)
+SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
+    SQLUSMALLINT IdentifierType,
+    SQLCHAR *CatalogName,
+    SQLSMALLINT NameLength1,
+    SQLCHAR *SchemaName,
+    SQLSMALLINT NameLength2,
+    SQLCHAR *TableName,
+    SQLSMALLINT NameLength3,
+    SQLUSMALLINT Scope,
+    SQLUSMALLINT Nullable __attribute__((aligned(8))))
+#else
 SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
     SQLUSMALLINT IdentifierType,
     SQLCHAR *CatalogName,
@@ -1460,6 +1472,7 @@ SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
     SQLSMALLINT NameLength3,
     SQLUSMALLINT Scope,
     SQLUSMALLINT Nullable)
+#endif
 {
   CHECK_STMT_CLEAR_ERROR(StatementHandle);
 #if defined(__APPLE__) && defined(__arm64__)
@@ -1468,8 +1481,8 @@ SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
   printf("iODBC version: %s\n", IODBC_VERSION);
 # endif
   printf("# scope %p nullable %p diff %llu\n ", &Scope, &Nullable, &Nullable - &Scope);
-  if (&Nullable - &Scope == 1) {
-    printf("# Nullable if it was padded: %hu\n", *(&Nullable + 3));
+  if (&Nullable - &Scope != 4) {
+    printf("# Nullable if it was padded: %hu\n", *(&Scope + 4));
   }
 # ifdef _ACTIONS_TRACE_
   if (getenv("GITHUB_ACTIONS") != NULL && strncmp(getenv("GITHUB_ACTIONS"), "true", 4) == 0 && IdentifierType == SQL_ROWVER)
@@ -1484,16 +1497,29 @@ SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
 /* }}} */
 
 /* {{{ SQLSpecialColumnsW */
+#if defined(__APPLE__) && defined(__arm64__)
 SQLRETURN SQL_API SQLSpecialColumnsW(SQLHSTMT StatementHandle,
-    SQLUSMALLINT IdentifierType,
-    SQLWCHAR *CatalogName,
-    SQLSMALLINT NameLength1,
-    SQLWCHAR *SchemaName,
-    SQLSMALLINT NameLength2,
-    SQLWCHAR *TableName,
-    SQLSMALLINT NameLength3,
-    SQLUSMALLINT Scope,
-    SQLUSMALLINT Nullable)
+  SQLUSMALLINT IdentifierType,
+  SQLWCHAR* CatalogName,
+  SQLSMALLINT NameLength1,
+  SQLWCHAR* SchemaName,
+  SQLSMALLINT NameLength2,
+  SQLWCHAR* TableName,
+  SQLSMALLINT NameLength3,
+  SQLUSMALLINT Scope,
+  SQLUSMALLINT Nullable __attribute__((aligned(8))))
+#else
+SQLRETURN SQL_API SQLSpecialColumnsW(SQLHSTMT StatementHandle,
+  SQLUSMALLINT IdentifierType,
+  SQLWCHAR* CatalogName,
+  SQLSMALLINT NameLength1,
+  SQLWCHAR* SchemaName,
+  SQLSMALLINT NameLength2,
+  SQLWCHAR* TableName,
+  SQLSMALLINT NameLength3,
+  SQLUSMALLINT Scope,
+  SQLUSMALLINT Nullable)
+#endif
 {
 #if defined(__APPLE__) && defined(__arm64__)
 # include <isql.h>
@@ -1501,8 +1527,8 @@ SQLRETURN SQL_API SQLSpecialColumnsW(SQLHSTMT StatementHandle,
   printf("iODBC version: %s\n", IODBC_VERSION);
 # endif
   printf("# scope %p nullable %p diff %llu\n ", &Scope, &Nullable, &Nullable - &Scope);
-  if (&Nullable - &Scope == 1) {
-    printf("# Nullable if it was padded: %hu\n", *(&Nullable + 3));
+  if (&Nullable - &Scope != 4) {
+    printf("# Nullable if it was padded: %hu\n", *(&Scope + 4));
   }
 # ifdef _ACTIONS_TRACE_
   if (getenv("GITHUB_ACTIONS") != NULL && strncmp(getenv("GITHUB_ACTIONS"), "true", 4) == 0 && IdentifierType == SQL_ROWVER)
