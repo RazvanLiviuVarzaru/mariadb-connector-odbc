@@ -727,7 +727,7 @@ ODBC_TEST(t_bug9927)
   SQLCHAR col[10];
   SQLRETURN rc;
   SQLULEN Nullable= ((ServerNotOlderThan(Connection, 10, 10, 2) || IsMysql) ?
-    SQL_NO_NULLS/*SQL_NULLABLE*/ : SQL_NO_NULLS);
+    SQL_NULLABLE : SQL_NO_NULLS);
   SQLULEN Scope= SQL_SCOPE_CURROW;
 
   OK_SIMPLE_STMT(Stmt, "DROP TABLE IF EXISTS t_bug9927");

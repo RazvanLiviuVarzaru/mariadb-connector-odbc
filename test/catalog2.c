@@ -1936,7 +1936,7 @@ ODBC_TEST(odbc391)
   SQLINTEGER len;
   BOOL found= FALSE;
   SQLCHAR  dropUser[24 + sizeof(my_host)], createUser[52 + sizeof(my_host)], grantAll[40 + sizeof(my_host)], revokeSelect[48 + sizeof(my_host)];
-  SQLULEN nullable= ((ServerNotOlderThan(Connection, 10, 10, 2) || IsMysql) ? SQL_NO_NULLS/*SQL_NULLABLE*/ : SQL_NO_NULLS);
+  SQLULEN nullable= ((ServerNotOlderThan(Connection, 10, 10, 2) || IsMysql) ? SQL_NULLABLE : SQL_NO_NULLS);
   SQLULEN scope= SQL_SCOPE_TRANSACTION;
   SQLRETURN rc;
   if (iOdbc() && OdbcVer == SQL_OV_ODBC2)
