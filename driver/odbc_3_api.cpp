@@ -1451,6 +1451,7 @@ SQLRETURN SQL_API SQLSetStmtOption(SQLHSTMT StatementHandle,
 
 /* {{{ SQLSpecialColumns */
 #if defined(__APPLE__) && defined(__arm64__)
+__attribute__((pcs("aapcs")))
 SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
     SQLUSMALLINT IdentifierType,
     SQLCHAR *CatalogName,
@@ -1460,7 +1461,7 @@ SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
     SQLCHAR *TableName,
     SQLSMALLINT NameLength3,
     SQLUSMALLINT Scope,
-    SQLUSMALLINT Nullable __attribute__((aligned(8))))
+    SQLUSMALLINT Nullable)
 #else
 SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
     SQLUSMALLINT IdentifierType,
@@ -1498,6 +1499,7 @@ SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
 
 /* {{{ SQLSpecialColumnsW */
 #if defined(__APPLE__) && defined(__arm64__)
+__attribute__((pcs("aapcs")))
 SQLRETURN SQL_API SQLSpecialColumnsW(SQLHSTMT StatementHandle,
   SQLUSMALLINT IdentifierType,
   SQLWCHAR* CatalogName,
@@ -1507,7 +1509,7 @@ SQLRETURN SQL_API SQLSpecialColumnsW(SQLHSTMT StatementHandle,
   SQLWCHAR* TableName,
   SQLSMALLINT NameLength3,
   SQLUSMALLINT Scope,
-  SQLUSMALLINT Nullable __attribute__((aligned(8))))
+  SQLUSMALLINT Nullable)
 #else
 SQLRETURN SQL_API SQLSpecialColumnsW(SQLHSTMT StatementHandle,
   SQLUSMALLINT IdentifierType,
