@@ -1459,8 +1459,9 @@ SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
     SQLSMALLINT NameLength2,
     SQLCHAR *TableName,
     SQLSMALLINT NameLength3,
-    SQLUSMALLINT Scope,
-    SQLUSMALLINT Nullable)
+    // iOdbc does not use exact API function signatures, but call all them as variadic functions, 8 first parameters are passed in registers, and these 2 are promoted to ints.
+    SQLUINTEGER Scope,
+    SQLUINTEGER Nullable)
 #else
 SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
     SQLUSMALLINT IdentifierType,
@@ -1476,7 +1477,7 @@ SQLRETURN SQL_API SQLSpecialColumns(SQLHSTMT StatementHandle,
 {
   CHECK_STMT_CLEAR_ERROR(StatementHandle);
   return MA_SQLSpecialColumns(StatementHandle, IdentifierType, CatalogName, NameLength1,
-    SchemaName, NameLength2, TableName, NameLength3, Scope, Nullable);
+    SchemaName, NameLength2, TableName, NameLength3, (SQLUSMALLINT)Scope, (SQLUSMALLINT)Nullable);
 }
 /* }}} */
 
@@ -1490,8 +1491,9 @@ SQLRETURN SQL_API SQLSpecialColumnsW(SQLHSTMT StatementHandle,
   SQLSMALLINT NameLength2,
   SQLWCHAR* TableName,
   SQLSMALLINT NameLength3,
-  SQLUSMALLINT Scope,
-  SQLUSMALLINT Nullable) __attribute__((pcs("aapcs")))
+  // iOdbc does not use exact API function signatures, but call all them as variadic functions, 8 first parameters are passed in registers, and these 2 are promoted to ints.
+  SQLUINTEGER Scope,
+  SQLUINTEGER Nullable)
 #else
 SQLRETURN SQL_API SQLSpecialColumnsW(SQLHSTMT StatementHandle,
   SQLUSMALLINT IdentifierType,
@@ -1505,25 +1507,12 @@ SQLRETURN SQL_API SQLSpecialColumnsW(SQLHSTMT StatementHandle,
   SQLUSMALLINT Nullable)
 #endif
 {
-#if defined(__APPLE__) && defined(__arm64__)
-# include <isql.h>
-# ifdef IODBC_VERSION
-  printf("iODBC version: %s\n", IODBC_VERSION);
-# endif
-  printf("# scope %p nullable %p diff %llu\n ", &Scope, &Nullable, &Nullable - &Scope);
-  if (&Nullable - &Scope != 4) {
-    printf("# Nullable if it was padded: %hu\n", *(&Scope + 4));
-  }
-# ifdef _ACTIONS_TRACE_
-  if (getenv("GITHUB_ACTIONS") != NULL && strncmp(getenv("GITHUB_ACTIONS"), "true", 4) == 0 && IdentifierType == SQL_ROWVER)
-  {
-    printf("# -- Nullable: %hu)\n", Nullable);
-  }
-# endif //_ACTIONS_TRACE_
-#endif // __APPLE__ && __arm64__
+  CHECK_STMT_CLEAR_ERROR(StatementHandle);
   return MA_SQLSpecialColumnsW(StatementHandle, IdentifierType, CatalogName, NameLength1,
-    SchemaName, NameLength2, TableName, NameLength3, Scope, Nullable);
+    SchemaName, NameLength2, TableName, NameLength3, (SQLUSMALLINT)Scope, (SQLUSMALLINT)Nullable);
 }
+
+
 /* }}} */
 
 /* {{{ SQLStatistics */
